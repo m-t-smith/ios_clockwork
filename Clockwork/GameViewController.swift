@@ -14,23 +14,52 @@ class GameViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
+        view = SKView()
         
-        if let view = self.view as! SKView? {
-            // Load the SKScene from 'GameScene.sks'
-            if let scene = SKScene(fileNamed: "GameScene") {
-                // Set the scale mode to scale to fit the window
-                scene.scaleMode = .aspectFill
-                
-                // Present the scene
-                view.presentScene(scene)
-            }
-            
-            view.ignoresSiblingOrder = true
-            
-            view.showsFPS = true
-            view.showsNodeCount = true
+        var skView: SKView {
+            return view as! SKView
         }
+        
+        skView.ignoresSiblingOrder = true
+        skView.showsFPS = true
+        skView.showsNodeCount = true
+        
+        let myWidth: CGFloat =  UIScreen.main.bounds.width
+        let myHeight: CGFloat = UIScreen.main.bounds.height
+        let mySize = CGSize(width: myWidth,
+                            height: myHeight)
+        let myFontSize: CGFloat = 50
+        let sstext = SKTexture(imageNamed: "spritesheet4")
+        
+        let scene = GameScene(size: mySize)
+        
+        let ss = SpriteSheet(texture: sstext, row: 4, col: 8)
+        
+        
+        let label = SKLabelNode(fontNamed: "AmericanTypewriter-CondensedLight")
+        label.text = "Clockwork Labyrinth"
+        label.color = SKColor.white
+        label.colorBlendFactor = 1.0
+        label.fontSize = myFontSize
+        label.position = CGPoint(x: scene.size.width / 2,
+                                 y: scene.size.height - myFontSize)
+        
+        let background = SKSpriteNode(color: SKColor.black,
+                                      size: CGSize(width: myWidth*2,
+                                                   height: myHeight*2))
+        let player = SKSpriteNode(texture: ss.getSpriteTexture(col: 1,
+                                                               row: 4))
+        player.position = CGPoint(x: scene.size.width / 2 ,
+                                  y: scene.size.height / 4)
+        scene.addChild(background)
+        scene.addChild(player)
+        scene.addChild(label)
+        
+        scene.animatePlayer(player: player, ss: ss)
+        
+        skView.presentScene(scene)
     }
+    
 
     override var shouldAutorotate: Bool {
         return true
